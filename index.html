@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Private Messaging</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h2>Private Messaging</h2>
+  <input id="username" placeholder="Enter your name (a, b, c)">
+  <button onclick="login()">Login</button>
+  <br><br>
+
+  <input id="receiver" placeholder="Send to (a, b, c)">
+  <input id="msgInput" placeholder="Message">
+  <button onclick="sendMsg()">Send</button>
+
+  <ul id="messages"></ul>
+
+  <script>
+    const socket = io();
+
+    function login() {
+      const username = document.getElementById("username").value;
+      socket.emit("login", username);
+    }
+
+    function sendMsg() {
+      const to = document.getElementById("receiver").value;
+      const msg = document.getElementById("msgInput").value;
+      socket.emit("sendToUser", { to, message: msg });
+    }
+
+    socket.on("privateMessage", (data) => {
+      const li = document.createElement("li");
+      li.textContent = `${data.from}: ${data.message}`;
+      document.getElementById("messages").appendChild(li);
+    });
+  </script>
+</body>
+</html>
