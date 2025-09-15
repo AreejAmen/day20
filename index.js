@@ -9,14 +9,13 @@ const io = new Server(server);
 io.on("connection", (socket) => {
   console.log("user connected:", socket.id);
 
-  // المستخدم يعلن اسمه بعد ما يعمل login
+  
   socket.on("login", (username) => {
-    socket.username = username; // نخزن الاسم في socket
-    socket.join(username);      // نخليه يدخل روم باسمه
+    socket.username = username; 
+    socket.join(username);     
     console.log(`${username} logged in and joined room: ${username}`);
   });
 
-  // إرسال رسالة لشخص محدد
   socket.on("sendToUser", ({ to, message }) => {
     console.log(`${socket.username} -> ${to}: ${message}`);
     io.to(to).emit("privateMessage", {
